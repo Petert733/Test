@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        https://www.springframework.org/schema/context/spring-context.xsd">
+        https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!--扫描组件-->
     <context:component-scan base-package="com.atguigu.ssm">
@@ -39,10 +39,20 @@
         若映射文件所在路径和mapper接口所在路径一致，则不需要设置
         -->
         <!--
-        <property name="mapperLocations" value="classpath:mapper/*.xml">
+        <property name="mapperLocations" value="classpath:*/mapper/*.xml">
         </property>
         -->
     </bean>
+
+<!--    配置事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+<!--    开启事务的注解驱动
+        将使用注解@Transactional标识的方法或类中所有的方法进行事务管理
+-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!--
     配置mapper接口的扫描配置
@@ -52,5 +62,6 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.atguigu.ssm.mapper"></property>
     </bean>
+
 
 </beans>
